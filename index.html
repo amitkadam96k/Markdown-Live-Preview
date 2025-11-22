@@ -18,7 +18,7 @@ body{margin:0;height:100vh;display:flex;flex-direction:column;background:var(--b
 .toolbar button{padding:.25rem .5rem;border:1px solid var(--border);background:var(--bg);color:var(--fg);cursor:pointer;border-radius:4px;font-size:12px;}
 .toolbar button:hover{background:var(--accent);color:#fff;}
 #status{margin-left:auto;font-size:11px;color:#888;}
-/* ---------- desktop split ---------- */
+/* desktop split */
 .main{flex:1;display:flex;overflow:hidden;}
 .pane{position:relative;height:100%;overflow:hidden;}
 #leftPane{width:50%;}
@@ -29,14 +29,20 @@ h3{margin:0;padding:.4rem .6rem;font-size:12px;font-weight:600;background:var(--
 #lineNumbers{position:absolute;left:0;top:0;bottom:0;width:40px;background:var(--line);color:#888;text-align:right;padding:8px 4px;font-size:14px;line-height:21px;overflow:hidden;user-select:none;}
 #md{position:absolute;left:40px;right:0;top:0;bottom:0;padding:8px;border:none;outline:none;resize:none;background:var(--bg);color:var(--fg);white-space:pre-wrap;overflow-y:scroll;}
 #preview{height:calc(100% - 21px);padding:8px;overflow:auto;}
-/* ---------- mobile tabs ---------- */
+/* mobile tabs */
 #tabBar{display:none;height:36px;background:var(--border);border-bottom:1px solid var(--border);}
 #tabBar button{flex:1;border:none;background:transparent;color:var(--fg);cursor:pointer;font-size:12px;}
 #tabBar button.active{background:var(--accent);color:#fff;}
 #mobilePane{flex:1;display:none;flex-direction:column;}
-#mobileEditor,#mobilePreview{flex:1;display:none;}
-#mobileEditor.show,#mobilePreview.show{display:flex;flex-direction:column;}
-/* ---------- markdown extras ---------- */
+#mobileEditor, #mobilePreview{
+  flex:1;
+  display:none;
+  height:calc(100% - 36px - 36px); /* toolbar + tab-bar */
+}
+#mobileEditor.show, #mobilePreview.show{display:flex;flex-direction:column;}
+#mobileMd{width:100%;height:100%;border:none;outline:none;resize:none;background:var(--bg);color:var(--fg);padding:8px;line-height:21px;white-space:pre-wrap;overflow-y:scroll;}
+#mobilePreview{height:100%;padding:8px;overflow:auto;}
+/* markdown extras */
 code{background:#8882;color:var(--accent);padding:.15rem .25rem;border-radius:4px;}
 pre{background:#8882;padding:.6rem;border-radius:6px;overflow-x:auto;}
 blockquote{border-left:4px solid var(--accent);margin:0 0 1rem;padding-left:.6rem;color:#888;}
@@ -45,13 +51,10 @@ th,td{border:1px solid var(--border);padding:.4rem;text-align:left;}
 th{background:#8881;}
 a{color:var(--accent);}
 footer{position:absolute;bottom:4px;right:8px;font-size:11px;color:#656d76;}
-/* ---------- responsive ---------- */
+/* responsive */
 @media (max-width:768px){
   #slider,.main,#leftPane,#rightPane,#editorWrap,#preview{display:none;}
   #tabBar,#mobilePane{display:flex;}
-  #mobileEditor,#mobilePreview{height:100%;}
-  #md,#mobilePreview{position:static;height:100%;width:100%;}
-  #lineNumbers{display:none;}
 }
 </style>
 </head>
@@ -61,11 +64,8 @@ footer{position:absolute;bottom:4px;right:8px;font-size:11px;color:#656d76;}
   <button id="btnTheme">🌓</button>
   <button id="btnExport">Export HTML</button>
   <span id="status">0 w 0 c</span>
-  <!-- GitHub icon -->
   <a href="https://github.com/amitkadam96k" target="_blank" rel="noopener" style="margin-left:.4rem;">
-    <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/>
-    </svg>
+    <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
   </a>
 </div>
 
@@ -149,7 +149,7 @@ btnSync.classList.toggle('on', syncEnabled);
 
 /* ---------- line numbers ---------- */
 function refreshLineNumbers(){
-  const lines = md.value.split('\n').length;
+  const lines = (isMobile() ? mobileMd.value : md.value).split('\n').length;
   lineNums.innerHTML = Array.from({length:lines},(_,i)=>i+1).join('<br>');
 }
 
